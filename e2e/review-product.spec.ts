@@ -290,6 +290,31 @@ describe('Review Product E2E', () => {
     });
   });
 
+  it('should not give error to not logged users', async () => {
+    await shopClient.asAnonymousUser();
+
+    await expect(
+      shopClient.query<ProductReviewQuery, ProductReviewQueryVariables>(
+        SHOP_PRODUCT_REVIEW
+      )
+    ).resolves.toEqual({
+      product: {
+        id: 'T_1',
+        canReview: false,
+        reviewAvg: 5,
+        reviews: {
+          items: [
+            {
+              id: 'T_1',
+              customerName: null,
+              ...exampleCreteReviewProduct
+            }
+          ]
+        }
+      }
+    });
+  });
+
   it('should get the the list of reviews of an product in shop', async () => {
     await expect(
       shopClient.query<ProductReviewQuery, ProductReviewQueryVariables>(

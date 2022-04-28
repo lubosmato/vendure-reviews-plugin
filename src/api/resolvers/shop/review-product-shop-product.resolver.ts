@@ -23,7 +23,8 @@ export class ReviewProductShopProductResolver {
 
   @ResolveField('canReview')
   async canReview(@Ctx() ctx: RequestContext, @Parent() product: Product) {
-    const customer = await this.reviewProductService.getCustomerOrThrow(ctx);
+    const customer = await this.reviewProductService.getCustomer(ctx);
+    if (!customer) return false;
     return this.reviewProductService.checkIfCustomerIsValidToCreateReviewProduct(
       customer,
       product
